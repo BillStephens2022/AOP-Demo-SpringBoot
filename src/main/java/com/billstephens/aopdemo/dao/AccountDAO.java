@@ -2,7 +2,13 @@ package com.billstephens.aopdemo.dao;
 
 import com.billstephens.aopdemo.Account;
 
+import java.util.List;
+
 public interface AccountDAO {
+
+    // add a new method: findAccounts()
+
+    List<Account> findAccounts();
 
     void addAccount(Account theAccount, boolean vipFlag);
 
