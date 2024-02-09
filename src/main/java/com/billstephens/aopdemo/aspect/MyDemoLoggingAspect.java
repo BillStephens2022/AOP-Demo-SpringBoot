@@ -2,10 +2,7 @@ package com.billstephens.aopdemo.aspect;
 
 import com.billstephens.aopdemo.Account;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -69,6 +66,18 @@ public class MyDemoLoggingAspect {
         System.out.println("\n=====>>> result is: " + result);
     }
 
+    @AfterThrowing(
+            pointcut = "execution(* com.billstephens.aopdemo.dao.AccountDAO.findAccounts(..))",
+            throwing = "theExc"
+    )
+    public void afterThrowingFindAccountAdvice(JoinPoint theJoinPoint, Throwable theExc) {
+        // print out which method we are advising on
+        String method = theJoinPoint.getSignature().toShortString();
+        System.out.println("\n=====>>> Executing @AfterThrowing on method: " + method);
+        // log the exception
+        System.out.println("\n=====>>> The exception is: " + theExc);
+    }
+
     private void convertAccountNamesToUpperCase(List<Account> result) {
 
         // loop through accounts
@@ -79,9 +88,6 @@ public class MyDemoLoggingAspect {
             // update the name on the account
             tempAccount.setName(theUpperName);
         }
-
-
-
 
     }
 
