@@ -2,6 +2,7 @@ package com.billstephens.aopdemo.aspect;
 
 import com.billstephens.aopdemo.Account;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
@@ -84,6 +85,25 @@ public class MyDemoLoggingAspect {
         String method = theJoinPoint.getSignature().toShortString();
         System.out.println("\n=====>>> Executing @After (finally) on method: " + method);
         System.out.println("\n=====>>> The exception is: " + method);
+    }
+
+    @Around("execution(* com.billstephens.aopdemo.service.*.getFortune(..))")
+    public Object aroundGetFortune(
+            ProceedingJoinPoint theProceedingJoinPoint) throws Throwable {
+        // print out method we are advising on
+        String method = theProceedingJoinPoint.getSignature().toShortString();
+        System.out.println("\n=====>>> Executing @Around on method: " + method);
+        // get begin timestamp
+        long begin = System.currentTimeMillis();
+        // now, let's execute the method
+        Object result = theProceedingJoinPoint.proceed();
+        // get end timestamp
+        long end = System.currentTimeMillis();
+        // compute duration and display it
+        long duration = end - begin;
+        System.out.println("\n=====> Duration: " + duration / 1000.0 + " seconds");
+
+        return result;
     }
 
     private void convertAccountNamesToUpperCase(List<Account> result) {
